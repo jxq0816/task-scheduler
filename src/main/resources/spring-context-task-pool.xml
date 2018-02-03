@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <bean id="segmentTask" class="com.week7i.share.SegmentTask"/>
+
+    <!-- 配置任务线性池 -->
+    <!--参数pool主要解决，多个调度并行的问题-->
+    <!--如果有5个scheduled-task任务，建议设置3到5个调度-->
+    <!--如果配置参数为1，5个task任务会依次执行，如果一个时间超出，后面的任务一直在等待，影响业务-->
+    <task:scheduler id="sgScheduler" pool-size="10"/>
+
+    <task:scheduled-tasks scheduler="sgScheduler">
+        <task:scheduled ref="segmentTask" method="segmentPool" cron="*/1 * * * * ?"/>
+    </task:scheduled-tasks>
+
+</beans>
